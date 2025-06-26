@@ -19,10 +19,10 @@
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script>
     // Extract lat, lon, radius from query string
-    const params = new URLSearchParams(window.location.search);
-    const lat = parseFloat(params.get("lat")) || 51.5072178;
-    const lon = parseFloat(params.get("lon")) || -0.1275862;
-    const radiusMiles = parseFloat(params.get("radius")) || 50;
+    const params = new URLSearchParams(window.location.search); 
+    const lat = parseFloat(params.get("lat")) || 52.2218523;
+    const lon = parseFloat(params.get("lon")) || 0.1279909;
+    const radiusMiles = parseFloat(params.get("radius")) || 5;
     const radiusMeters = radiusMiles * 1609.344;
 
     const map = L.map("map").setView([lat, lon], 9);
@@ -34,8 +34,8 @@
 
     L.circle([lat, lon], {
       radius: radiusMeters,
-      color: "red",
-      fillColor: "#f03",
+      color: "green",
+      fillColor: "#3f0",
       fillOpacity: 0.2
     }).addTo(map).bindPopup(`Radius: ${radiusMiles} mi`);
   </script>
