@@ -54,7 +54,7 @@
       entries.forEach((pt, i) => {
         const icon = i === 0 ? redIcon : blueIcon;
         const marker = L.marker([pt.lat, pt.lon], { icon }).addTo(map);
-        marker.bindPopup(pt.label);
+        marker.bindTooltip(pt.label, { permanent: true, direction: "top" }).openTooltip();
         bounds.push([pt.lat, pt.lon]);
       });
 
