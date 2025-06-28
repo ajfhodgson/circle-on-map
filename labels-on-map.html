@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Labels on Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+  />
+  <style>
+    html, body { margin: 0; height: 100%; }
+    #map { width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q");
+
+    const redIcon = new L.Icon({
+      iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+      shadowUrl: "https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png",
+      iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+    });
+
+    const blueIcon = new L.Icon({
+      iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
+      shadowUrl: "https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png",
+      iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+    });
+
+    const map = L.map("map").setView([51.5, -0.1], 6);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18,
+      attribution: "© OpenStreetMap contributors"
+    }).addTo(map);
+
+    if (q) {
+      const entries = q.split("|").map(t => {
+        const match = t.match(/^\(?\s*(-?\d+(\.\d+)?)\s*,\s*(-?\d+(\.\d+)?)\s*,\s*(.*?)\s*\)?$/);
+        return match ? {
+          lat: parseFloat(match[1]),
+          lon: parseFloat(match[3]),
+          label: decodeURIComponent(match[5])
+        } : null;
+      }).filter(e => e);
+
+      const bounds = [];
+
+      entries.forEach((pt, i) => {
+        const icon = i === 0 ? redIcon : blueIcon;
+        const marker = L.marker([pt.lat, pt.lon], { icon }).addTo(map);
+        marker.bindPopup(pt.label);
+        bounds.push([pt.lat, pt.lon]);
+      });
+
+      if (bounds.length > 0) map.fitBounds(bounds, { padding: [20, 20] });
+    }
+  </script>
+</body>
+</html>
