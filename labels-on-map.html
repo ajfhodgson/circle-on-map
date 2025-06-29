@@ -11,6 +11,25 @@
   <style>
     html, body { margin: 0; height: 100%; }
     #map { width: 100%; height: 100%; }
+    
+.leaflet-tooltip.label-red {
+  background-color: #d9534f;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  border: 1px solid #b52b27;
+  padding: 4px 8px;
+}
+
+.leaflet-tooltip.label-blue {
+  background-color: #337ab7;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  border: 1px solid #285e8e;
+  padding: 4px 8px;
+}
+    
   </style>
 </head>
 <body>
@@ -51,12 +70,18 @@
 
       const bounds = [];
 
-      entries.forEach((pt, i) => {
-        const icon = i === 0 ? redIcon : blueIcon;
-        const marker = L.marker([pt.lat, pt.lon], { icon }).addTo(map);
-        marker.bindTooltip(pt.label, { permanent: true, direction: "top" }).openTooltip();
-        bounds.push([pt.lat, pt.lon]);
-      });
+entries.forEach((pt, i) => {
+  const marker = L.marker([pt.lat, pt.lon], { opacity: 0 }).addTo(map);  // invisible marker
+  const colorClass = i === 0 ? "label-red" : "label-blue";
+  marker.bindTooltip(pt.label, {
+    permanent: true,
+    direction: "top",
+    className: `leaflet-tooltip ${colorClass}`,
+    offset: [0, -10]
+  }).openTooltip();
+
+  bounds.push([pt.lat, pt.lon]);
+});
 
       if (bounds.length > 0) map.fitBounds(bounds, { padding: [20, 20] });
     }
