@@ -48,12 +48,13 @@
 
       const bounds = [];
 
-entries.forEach((pt) => {
+[...entries].reverse().forEach((pt) => {
   // Circle with no fill
   L.circle([pt.lat, pt.lon], {
     radius: pt.radius,
     color: pt.color,
-    fill: false,
+    fillColor: pt.color,
+    fillOpacity: 0.1,
     weight: 2
   }).addTo(map);
 
